@@ -84,6 +84,8 @@ veins/
 
 ## Detailed Documentation: veins_launchd
 
+> **📚 For comprehensive technical documentation, see [VEINS_LAUNCHD_TECHNICAL_DOCUMENTATION.md](VEINS_LAUNCHD_TECHNICAL_DOCUMENTATION.md)**
+
 The `veins_launchd` script is a critical component of the Veins framework that acts as a bridge between OMNeT++ simulations and SUMO traffic simulation. It's a Python-based daemon that manages SUMO instances and handles TraCI (Traffic Control Interface) communications.
 
 ### Purpose and Functionality
