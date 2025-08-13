@@ -48,14 +48,12 @@
 ```mermaid
 graph TD
     subgraph OMNet["OMNeT++ Simulation"]
-        subgraph Manager["TraCIScenarioManagerLaunchd (C++)"]
+        subgraph Manager["TraCIScenarioManagerLaunchd"]
             A1["Sends launch configuration"]
             A2["Manages vehicle nodes"]
             A3["Controls simulation time"]
         end
     end
-
-    OMNet -->|TraCI Protocol (TCP)<br>Port: 9999 (default)| Veins
 
     subgraph Veins["veins_launchd (Python)"]
         subgraph Components["Main Components"]
@@ -67,10 +65,8 @@ graph TD
         end
     end
 
-    Veins -->|TraCI Protocol (TCP)<br>Dynamic Port Assignment| Sumo
-
     subgraph Sumo["SUMO Instance"]
-        subgraph SumoDetails[""]
+        subgraph SumoDetails[" "]
             C1["Traffic simulation"]
             C2["Vehicle movement"]
             C3["Traffic light control"]
@@ -78,6 +74,8 @@ graph TD
         end
     end
 
+    OMNet -->|"TraCI Protocol (TCP)<br/>Port: 9999 (default)"| Veins
+    Veins -->|"TraCI Protocol (TCP)<br/>Dynamic Port Assignment"| Sumo
 ```
 
 ### Key Design Principles
