@@ -43,40 +43,11 @@
 <details>
 <summary><b>📊 System Overview (Click to expand)</b></summary>
 
+<img src="doc/diagrams/ High-Level Architecture_Diagram.svg" alt="Description" width="700" height="700">
+
 ### Component Interaction Model
 
-```mermaid
-graph TD
-    subgraph OMNet["OMNeT++ Simulation"]
-        subgraph Manager["TraCIScenarioManagerLaunchd"]
-            A1["Sends launch configuration"]
-            A2["Manages vehicle nodes"]
-            A3["Controls simulation time"]
-        end
-    end
-
-    subgraph Veins["veins_launchd (Python)"]
-        subgraph Components["Main Components"]
-            B1["TCP Socket Server (wait_for_connections)"]
-            B2["Connection Handler (handle_connection)"]
-            B3["Launch Config Parser (parse_launch_configuration)"]
-            B4["SUMO Manager (run_sumo)"]
-            B5["Message Proxy (forward_connection)"]
-        end
-    end
-
-    subgraph Sumo["SUMO Instance"]
-        subgraph SumoDetails[" "]
-            C1["Traffic simulation"]
-            C2["Vehicle movement"]
-            C3["Traffic light control"]
-            C4["Route management"]
-        end
-    end
-
-    OMNet -->|"TraCI Protocol (TCP)<br/>Port: 9999 (default)"| Veins
-    Veins -->|"TraCI Protocol (TCP)<br/>Dynamic Port Assignment"| Sumo
-```
+<img src="doc/diagrams/High-Level_Component-InterAction.svg" alt="Description" width="700" height="700">
 
 ### Key Design Principles
 
@@ -863,15 +834,15 @@ chmod 700 /secure/tmp
 
 ### High-Level Architecture Diagram
 
-![Alt text](doc/diagrams/ High-Level Architecture_Diagram.svg)
+<img src="doc/diagrams/ High-Level Architecture_Diagram.svg" alt="Description" width="700" height="700">
 
 ### High-Level Sequence Diagram
 
-![Alt text](doc/diagrams/High_level_sequence.svg)
+<img src="doc/diagrams/High_level_sequence.svg" alt="Description" width="700" height="700">
 
 ### Connection Establishment Sequence
 
-![Alt text](doc/diagrams/Connection_establishment.svg)
+<img src="doc/diagrams/Connection_establishment.svg" alt="Description" width="700" height="700">
 
 ### State Machine Diagram
 
