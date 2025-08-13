@@ -45,45 +45,7 @@
 
 ### Component Interaction Model
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         OMNeT++ Simulation                      │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │         TraCIScenarioManagerLaunchd (C++)               │  │
-│  │  - Sends launch configuration                           │  │
-│  │  - Manages vehicle nodes                                │  │
-│  │  - Controls simulation time                             │  │
-│  └─────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              │ TraCI Protocol (TCP)
-                              │ Port: 9999 (default)
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      veins_launchd (Python)                     │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  Main Components:                                        │  │
-│  │  • TCP Socket Server (wait_for_connections)             │  │
-│  │  • Connection Handler (handle_connection)               │  │
-│  │  • Launch Config Parser (parse_launch_configuration)    │  │
-│  │  • SUMO Manager (run_sumo)                             │  │
-│  │  • Message Proxy (forward_connection)                   │  │
-│  └─────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              │ TraCI Protocol (TCP)
-                              │ Dynamic Port Assignment
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        SUMO Instance                            │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  - Traffic simulation                                    │  │
-│  │  - Vehicle movement                                      │  │
-│  │  - Traffic light control                                 │  │
-│  │  - Route management                                      │  │
-│  └─────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-```
+![High-Level Architecture SVG](doc/diagrams/High-Level_Architecture.svg)
 
 ### Key Design Principles
 
