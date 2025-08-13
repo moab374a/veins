@@ -861,83 +861,25 @@ chmod 700 /secure/tmp
 <details>
 <summary><b>📈 Sequence and Flow Diagrams (Click to expand)</b></summary>
 
+### High-Level Architecture Diagram
+
+![Alt text](doc/diagrams/ High-Level Architecture_Diagram.svg)
+
+### High-Level Sequence Diagram
+
+![Alt text](doc/diagrams/High_level_sequence.svg)
+
 ### Connection Establishment Sequence
 
-```mermaid
-sequenceDiagram
-    participant O as OMNeT++
-    participant V as veins_launchd
-    participant S as SUMO
-
-    O->>V: TCP Connect (port 9999)
-    V->>V: Spawn handler thread
-    O->>V: CMD_GET_VERSION (optional)
-    V->>O: Version response
-    O->>V: CMD_FILE_SEND<br/>"sumo-launchd.launch.xml"
-    V->>V: Parse XML configuration
-    V->>V: Create temp directory
-    V->>V: Copy & modify files
-    V->>V: Find unused port
-    V->>S: Start SUMO process
-    S->>S: Bind to TraCI port
-    V->>S: Connect to SUMO
-    V->>O: OK response
-    O->>V: TraCI commands
-    V->>S: Forward commands
-    S->>V: TraCI responses
-    V->>O: Forward responses
-    Note over O,S: Simulation runs...
-    O->>V: Close connection
-    V->>S: SIGTERM
-    S->>S: Shutdown
-    V->>V: Cleanup temp files
-```
+![Alt text](doc/diagrams/Connection_establishment.svg)
 
 ### State Machine Diagram
 
-```mermaid
-stateDiagram-v2
-    [*] --> Listening: Start daemon
-    Listening --> Connected: Accept connection
-    Connected --> Authenticated: Version check
-    Authenticated --> Configured: Receive launch config
-    Configured --> Preparing: Parse XML
-    Preparing --> Starting: Create temp dir
-    Starting --> Running: Launch SUMO
-    Running --> Proxying: Connect to SUMO
-    Proxying --> Proxying: Forward messages
-    Proxying --> Terminating: Connection closed
-    Terminating --> Cleanup: Kill SUMO
-    Cleanup --> Listening: Thread exits
-    Listening --> [*]: Shutdown signal
-```
+<img src="doc/diagrams/State_machine.svg" alt="Description" width="700" height="700">
 
 ### Data Flow Diagram
 
-```mermaid
-graph TD
-    A[OMNeT++ Simulation] -->|Launch Config XML| B[veins_launchd]
-    B -->|Parse| C[Config Parser]
-    C -->|Extract| D[File List]
-    C -->|Extract| E[Seed Value]
-    C -->|Extract| F[Base Directory]
-
-    D --> G[File Copier]
-    E --> G
-    F --> G
-
-    G -->|Modified Files| H[Temp Directory]
-
-    B -->|Start Process| I[SUMO]
-    H -->|Config Files| I
-
-    I -.->|TraCI Port| B
-    B -.->|Proxy| A
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style I fill:#9f9,stroke:#333,stroke-width:2px
-    style B fill:#99f,stroke:#333,stroke-width:2px
-```
+<img src="doc/diagrams/Data_flow.svg" alt="Description" width="600" height="600">
 
 ### Component Interaction Timeline
 
