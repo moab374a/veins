@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Default simulation with original config
+  veins-default:
+    build: .
+    container_name: veins-simulation-default
+    volumes:
+      - ./examples/veins/results:/app/examples/veins/results
+    environment:
+      - START_SUMO_DAEMON=false
+    command: ["-u", "Cmdenv"]
+    network_mode: "host"
+
+volumes:
+  results-default:

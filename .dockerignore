@@ -1,0 +1,60 @@
+# Ignore build artifacts and temporary files
+out/
+*.o
+*.so
+*.a
+*.d
+*.pyc
+__pycache__/
+
+# Ignore results and logs
+results*/
+*.log
+*.sca
+*.vec
+*.vci
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore documentation builds
+doc/doxy/
+
+# Ignore temporary and cache files
+.cache/
+tmp/
+temp/
+
+# Ignore Docker files to avoid recursion
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore README and documentation (they're not needed in container)
+README.md
+README.txt
+README-Docker.md
+*.md
+
+# Ignore management scripts
+docker-manager.sh
+
+# Keep only essential files for building and running
+!src/
+!examples/
+!images/
+!bin/
+!configure
+!Makefile
+!setenv
+!print-veins-version
+!sumo-launchd.py
+!COPYING
