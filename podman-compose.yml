@@ -1,0 +1,102 @@
+version: '3.8'
+
+#============================================================================
+# Minimal Docker Compose Configuration for Veins + External SUMO
+#
+# Purpose: Simple container setup focused on external SUMO orchestration
+#
+# Architecture:
+# - veins-simulation: Main service for running simulations
+# - veins-interactive: Development/debugging service
+#
+# Key Features:
+# - Files mounted at ..........  for external SUMO orchestrator access
+# - Host networking for TraCI communication on port 9999
+# - Results directory mounted for output collection
+#============================================================================
+
+services:
+
+  #--------------------------------------------------------------------------
+  # Main Simulation Service
+  # Used for running actual simulations with external SUMO orchestrator
+  #--------------------------------------------------------------------------
+  veins-simulation:
+    # Build from Dockerfile in current directory
+    build: .
+
+    # Container name for easy identification
+    container_name: veins-simulation
+
+    # Volume mounts to share files between container and host
+    volumes:
+      # Mount results directory for simulation outputs
+      - ./results:/app/examples/veins/results
+
+      # Mount examples directory to host-accessible location
+      # This solves the basedir issue - external SUMO orchestrator
+      # can access files at ........... on the host
+      - ./examples/veins:/home/moab374a/simulation-workspace/software/veins/examples/veins/
+
+    # Environment variables
+    environment:
+      # Don't start internal SUMO daemon - we use external orchestrator
+      - START_SUMO_DAEMON=false
+
+    # Default command: run simulation in command-line mode
+    command: ["-u", "Cmdenv"]
+
+    # Use host networking for TraCI communication on port 9999
+    # This allows container to connect to external SUMO orchestrator
+    network_mode: "host"
+
+  #--------------------------------------------------------------------------
+  # Interactive Development Service
+  # Used for debugging, exploration, and manual simulation runs
+  #--------------------------------------------------------------------------
+  veins-interactive:
+    # Build from same Dockerfile
+    build: .
+
+    # Container name for easy identification
+    container_name: veins-interactive
+
+    # Volume mounts for development work
+    volumes:
+      # Mount results directory
+      - ./results:/app/examples/veins/results
+
+      # Mount entire workspace for development access
+      - .:/app/host-workspace
+
+      # Mount examples for external SUMO access
+      - ./examples/veins:/home/moab374a/simulation-workspace/software/veins/examples/veins/
+
+    # Environment variables
+    environment:
+      - START_SUMO_DAEMON=false
+
+    # Override entrypoint to keep container running
+    entrypoint: ["/bin/bash", "-c"]
+
+    # Command to keep container alive (does nothing but stay running)
+    command: ["tail -f /dev/null"]
+
+    # Use host networking
+    network_mode: "host"
+
+    # Enable interactive terminal access
+    stdin_open: true
+    tty: true
+
+#============================================================================
+# Volume Definitions
+# Define named volumes for data persistence (currently none needed)
+#============================================================================
+volumes: {}
+
+#============================================================================
+# Network Definitions
+# Use host networking, so no custom networks needed
+#============================================================================
+networks: {}

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!--
+Veins Launch Configuration for External SUMO Orchestrator
+
+Purpose: Configuration file that tells Veins where to find SUMO simulation files
+and how to set them up for the external SUMO orchestrator.
+
+Key Configuration:
+- basedir: Points to .......... where external orchestrator can access files
+- copy elements: Define which SUMO files to copy to the working directory
+- Files are accessible to host SUMO orchestrator at ...........
+
+This solves the basedir path issue by using a host-accessible directory.
+-->
+
+<launch>
+    <!--
+    Base Directory Configuration
+    This is the crucial setting that fixes the external SUMO orchestrator access issue.
+
+    - Container path: Files are copied here inside container
+    - Host path: External orchestrator finds files at ...........
+    - The volume mount in docker-compose makes these the same location
+    -->
+
+
+    <basedir path="/home/moab374a/simulation-workspace/software/veins/examples/veins/" />
+
+
+
+
+    <!--
+    Random Seed for Reproducibility
+    Set to 0 for default behavior, or specify a number for reproducible results
+    -->
+    <seed value="0" />
+
+    <!--
+    File Copy Configuration
+    These files are copied from the examples/veins/ directory to the basedir
+    so the external SUMO orchestrator can access them
+    -->
+
+    <!-- Network topology file (roads, junctions, etc.) -->
+    <copy file="erlangen.net.xml" />
+
+    <!-- Route definitions (vehicle paths and timing) -->
+    <copy file="erlangen.rou.xml" />
+
+    <!-- Polygon definitions (buildings, areas for visualization) -->
+    <copy file="erlangen.poly.xml" />
+
+    <!--
+    Main SUMO configuration file
+    type="config" means this is the primary configuration file that SUMO will load
+    -->
+    <copy file="erlangen.sumo.cfg" type="config" />
+
+</launch>

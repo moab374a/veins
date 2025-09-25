@@ -33,6 +33,7 @@
 
 <!-- debug config -->
 <launch>
+    <basedir path="/home/moab374a/simulation-workspace/software" />
     <copy file="erlangen.net.xml" />
     <copy file="erlangen.rou.xml" />
     <copy file="erlangen.poly.xml" />
