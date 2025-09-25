@@ -44,6 +44,8 @@ show_help() {
     echo "  run-all              Run all default configurations"
     echo "  run-custom           Run custom configurations"
     echo "  run-parallel         Run multiple configurations in parallel"
+    echo "  interactive          Start an interactive container shell"
+    echo "  shell                Same as interactive"
     echo "  stop                 Stop all running containers"
     echo "  clean                Clean up containers and results"
     echo "  status               Show status of all containers"
@@ -58,6 +60,7 @@ show_help() {
     echo "Examples:"
     echo "  $0 build"
     echo "  $0 run default"
+    echo "  $0 interactive       # Start interactive shell"
     echo "  $0 run-all"
     echo "  $0 logs default"
 }
@@ -110,6 +113,33 @@ run_parallel() {
     log_info "Use '$0 status' to check progress"
     log_info "Use '$0 logs [config]' to view logs"
     log_info "Use '$0 stop' to stop all simulations"
+}
+
+# Function to run interactive shell
+run_interactive() {
+    log_info "Starting interactive container..."
+    log_info "This will keep the container alive for debugging and exploration"
+
+    # Check if interactive container is already running
+    if podman ps --format "table {{.Names}}" | grep -q "veins-simulation-interactive"; then
+        log_info "Interactive container already running, connecting to existing container..."
+        podman exec -it veins-simulation-interactive /bin/bash
+    else
+        log_info "Starting new interactive container..."
+        podman-compose up -d veins-interactive
+
+        # Wait a moment for container to start
+        sleep 2
+
+        log_success "Interactive container started. Entering shell..."
+        log_info "Available commands in container:"
+        log_info "  - Run simulation: ./run -u Cmdenv"
+        log_info "  - Check environment: env | grep OPP"
+        log_info "  - Exit: exit or Ctrl+D"
+        log_info "Host workspace mounted at: /app/host-workspace"
+
+        podman exec -it veins-simulation-interactive /bin/bash
+    fi
 }
 
 # Function to stop all containers
@@ -229,10 +259,6 @@ list_configs() {
 setup_directories() {
     mkdir -p configs
     mkdir -p results-default
-    mkdir -p results-beaconing
-    mkdir -p results-channel-switching
-    mkdir -p results-custom1
-    mkdir -p results-custom2
 }
 
 # Main script logic
@@ -252,6 +278,9 @@ case ${1:-help} in
         ;;
     run-parallel)
         run_parallel
+        ;;
+    interactive|shell)
+        run_interactive
         ;;
     stop)
         stop_all

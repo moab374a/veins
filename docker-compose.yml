@@ -7,10 +7,26 @@ services:
     container_name: veins-simulation-default
     volumes:
       - ./examples/veins/results:/app/examples/veins/results
+
     environment:
       - START_SUMO_DAEMON=false
     command: ["-u", "Cmdenv"]
     network_mode: "host"
+
+  # Interactive mode - keeps container alive for debugging/exploration
+  veins-interactive:
+    build: .
+    container_name: veins-simulation-interactive
+    volumes:
+      - ./examples/veins/results:/app/examples/veins/results
+      - .:/app/host-workspace  # Mount the entire host workspace for development
+    environment:
+      - START_SUMO_DAEMON=false
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["tail -f /dev/null"]  # Keep container alive
+    network_mode: "host"
+    stdin_open: true
+    tty: true
 
 volumes:
   results-default:

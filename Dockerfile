@@ -90,6 +90,17 @@ COPY . .
 # Configure and build Veins
 RUN ./configure && make -j$(nproc)
 
+# Record Veins version (if git metadata is available)
+RUN /bin/bash -lc 'if git describe --tags --always >/dev/null 2>&1; then \
+    TAG=$(git describe --tags --always 2>/dev/null); \
+    echo "$TAG" > /app/VEINS_VERSION; \
+  elif [ -f doc/version.sh ]; then \
+    v=$(bash doc/version.sh); \
+    [ -n "$v" ] && echo "veins-$v" > /app/VEINS_VERSION || echo "unknown" > /app/VEINS_VERSION; \
+  else \
+    echo "unknown" > /app/VEINS_VERSION; \
+  fi'
+
 # Create directory for configurations
 RUN mkdir -p /app/configs
 
@@ -104,6 +115,12 @@ RUN echo '#!/bin/bash\n\
 # Set up environment\n\
 export PATH=/opt/omnetpp/bin:$PATH\n\
 export LD_LIBRARY_PATH=/opt/omnetpp/lib:$LD_LIBRARY_PATH\n\
+\n\
+# Print versions\n\
+OMNET_VER=$(opp_run -V 2>&1 | head -n1 || true)\n\
+if [ -f /app/VEINS_VERSION ]; then VEINS_VER=$(cat /app/VEINS_VERSION); else VEINS_VER="unknown"; fi\n\
+echo "OMNeT++: ${OMNET_VER}"\n\
+echo "Veins:   ${VEINS_VER}"\n\
 \n\
 # Execute the simulation\n\
 exec ./run "$@"\n\
